@@ -1,35 +1,48 @@
 import { routerRedux } from 'dva/router';
 import { stringify } from 'qs';
 import { fetchLogin } from '@/services/user.service';
-import { setAuthority } from '@/utils/authority';
 import { getPageQuery } from '@/utils/utils';
 import { reloadAuthorized } from '@/utils/Authorized';
 
 export default {
   namespace: 'login',
-  state: {
-    status: undefined
+  state: {},
+  subscriptions: {
+    setup({ dispatch, history }) {
+      history.listen((location) => {
+        if (location.pathname === '/user/login') {
+          // console.log('lll')
+          // dispatch({
+          //   type: 'getUserInfo',
+          //   payload: '',
+          // })
+        }
+      });
+    }
   },
-
   effects: {
     *login({ payload }, { call, put }) {
       const response = yield call(fetchLogin, payload);
-      console.log(response);
-      yield put({
-        type: 'changeLoginStatus',
-        payload: response
-      });
-      // Login successfully
-      if (response.code === 'ok') {
+      if (response.data) {
+        window.sessionStorage.setItem('token', response.data);
+      }
+      // yield put({
+      //   type: 'changeLoginStatus',
+      //   payload: {
+      //     ...response,
+      //     isLogin: true
+      //   }
+      // });
+      if (response.code === 0) {
         reloadAuthorized();
         const urlParams = new URL(window.location.href);
-        console.log('urlParams', urlParams);
+        // console.log('urlParams', urlParams);
         const params = getPageQuery();
-        console.log('params', params);
+        // console.log('params', params);
         let { redirect } = params;
         if (redirect) {
           const redirectUrlParams = new URL(redirect);
-          console.log('redirectUrlParams', redirectUrlParams);
+          // console.log('redirectUrlParams', redirectUrlParams);
           if (redirectUrlParams.origin === urlParams.origin) {
             redirect = redirect.substr(urlParams.origin.length);
             if (redirect.match(/^\/.*#/)) {
@@ -43,7 +56,6 @@ export default {
         yield put(routerRedux.replace(redirect || '/'));
       }
     },
-
     *getCaptcha({ payload }, { call }) {
       // yield call(getFakeCaptcha, payload);
     },
@@ -70,10 +82,10 @@ export default {
 
   reducers: {
     changeLoginStatus(state, { payload }) {
-      setAuthority(payload.data.currentAuthority);
+      // setAuthority(payload.data.roles);
       return {
         ...state,
-        status: payload.code
+        isLogin: payload.isLogin
       };
     }
   }

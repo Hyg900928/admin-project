@@ -5,7 +5,10 @@ export default [
     component: '../layouts/UserLayout',
     routes: [
       { path: '/user', redirect: '/user/login' },
-      { path: '/user/login', component: './User/Login' }
+      { path: '/user/login', component: './User/Login' },
+      {
+        component: './404'
+      }
     ]
   },
   // app
@@ -13,14 +16,14 @@ export default [
     path: '/',
     component: '../layouts/BasicLayout',
     Routes: ['src/pages/Authorized'], // 权限路由
-    authority: ['admin','user'],      // 准入权限
+    authority: ['admin', 'user'], // 准入权限
     routes: [
       { path: '/', redirect: '/system/userInfo' },
       {
         name: 'exception',
         icon: 'warning',
         path: '/exception',
-        hideInMenu: true,
+        // hideInMenu: true,
         routes: [
           // exception
           {
@@ -55,8 +58,8 @@ export default [
           {
             path: '/system/userInfo',
             name: 'userInfo',
-            component: './System/userInfo/userInfo',
-          },
+            component: './System/userInfo/userInfo'
+          }
         ]
       },
       // 权限管理模块
@@ -74,13 +77,13 @@ export default [
           {
             path: '/permission/allocation',
             name: 'allocation',
-            component: './Permission/allocation',
+            component: './Permission/allocation'
           },
           {
             path: '/permission/log',
             name: 'log',
-            component: './Permission/log',
-          },
+            component: './Permission/log'
+          }
         ]
       },
       // 用户管理
@@ -92,13 +95,14 @@ export default [
           {
             path: '/userManagement/search',
             name: 'search',
-            component: './UserManagement/search/search',
-          },
+            component: './UserManagement/search/search'
+          }
         ]
       },
       // 用户管理模块
+      {},
       {
-
+        component: './404'
       }
     ]
   }

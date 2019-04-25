@@ -16,13 +16,35 @@ export interface SideMenuProps extends BaseMenuProps {
 
 interface State {
   readonly openKeys: string[];
+  flatMenuKeysLen?: Number;
+  pathname?: String;
 }
+let firstMount = true;
 
 class SideMenu extends React.PureComponent<SideMenuProps, State> {
-  readonly state: State = {
-    openKeys: getDefaultCollapsedSubMenus(this.props)
-  };
-
+  constructor(props: SideMenuProps) {
+    super(props);
+    this.state = {
+      openKeys: getDefaultCollapsedSubMenus(this.props)
+    };
+  }
+  static getDerivedStateFromProps(props: SideMenuProps, state: State): State {
+    const { pathname, flatMenuKeysLen } = state;
+    if (
+      props.location.pathname !== pathname ||
+      props.flatMenuKeys.length !== flatMenuKeysLen
+    ) {
+      return {
+        pathname: props.location.pathname,
+        flatMenuKeysLen: props.flatMenuKeys.length,
+        openKeys: getDefaultCollapsedSubMenus(props)
+      };
+    }
+    return null;
+  }
+  componentDidMount() {
+    firstMount = false;
+  }
   //
   isMainMenu = (key) => {
     const { menuData } = this.props;
@@ -44,16 +66,19 @@ class SideMenu extends React.PureComponent<SideMenuProps, State> {
   };
 
   render() {
-    const { theme, collapsed, onCollapse, fixSideBar } = this.props;
+    const { theme, collapsed, onCollapse, fixSideBar, isMobile } = this.props;
     const { openKeys } = this.state;
     const defaultProps = collapsed ? {} : { openKeys };
-
     return (
       <Sider
         trigger={null}
         collapsible
         collapsed={collapsed}
-        onCollapse={onCollapse}
+        onCollapse={(collapse) => {
+          if (firstMount || isMobile) {
+            onCollapse(collapse);
+          }
+        }}
         breakpoint="lg"
         width={256}
         className={ClassNames(styles.sideMenu, {

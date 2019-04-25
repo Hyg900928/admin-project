@@ -2,7 +2,7 @@
 export const AXIOS_DEFAULT_CONFIG = {
   timeout: 20000,
   withCredentials: true,
-  baseURL: '/'
+  baseURL: 'http://localhost:9001'
 };
 
 // 项目相关配置

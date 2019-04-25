@@ -3,24 +3,33 @@ import ClassNames from 'classnames';
 import { Button } from 'antd';
 import config from './typeConfig';
 import styles from './index.less';
+import * as H from 'history';
 
-export interface ExceptionProps {
+export interface ExceptionProps<
+  L = {
+    to: H.LocationDescriptor;
+    href?: H.LocationDescriptor;
+    replace?: boolean;
+    innerRef?: (node: HTMLAnchorElement | null) => void;
+  }
+> {
   className?: string;
-  backText?: React.ReactNode;
+  backText?: React.ReactNode | String;
   type?: '403' | '404' | '500';
   title?: React.ReactNode;
   desc?: React.ReactNode;
   img?: string;
   actions?: React.ReactNode;
-  linkElement?: string | React.ReactNode;
+  linkElement?: string | React.ComponentType<L>;
   style?: React.CSSProperties;
+  redirect?: string;
 }
 
 class Exception extends React.Component<ExceptionProps, any> {
   static defaultProps = {
     className: '',
     backText: '返回首页',
-    linkElement: 'a'
+    redirect: '/'
   };
 
   constructor(props) {
@@ -36,7 +45,8 @@ class Exception extends React.Component<ExceptionProps, any> {
       title,
       desc,
       actions,
-      linkElement
+      linkElement = 'a',
+      redirect
     } = this.props;
 
     const pageType = type in config ? type : '404';
@@ -58,10 +68,10 @@ class Exception extends React.Component<ExceptionProps, any> {
           <div className={styles.actions}>
             {actions ||
               React.createElement(
-                linkElement as any,
+                linkElement,
                 {
-                  to: '/',
-                  href: '/'
+                  to: redirect,
+                  href: redirect
                 },
                 <Button type="primary">{backText}</Button>
               )}

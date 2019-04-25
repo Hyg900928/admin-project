@@ -3,19 +3,23 @@ import router from 'umi/router';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 import { AXIOS_DEFAULT_CONFIG } from '@/config';
-import { getCookie } from '@/utils/cookie';
+import Storage from '@/utils/storage';
 
 axios.defaults.timeout = AXIOS_DEFAULT_CONFIG.timeout;
 axios.defaults.baseURL = AXIOS_DEFAULT_CONFIG.baseURL;
 axios.defaults.withCredentials = AXIOS_DEFAULT_CONFIG.withCredentials;
+axios.defaults.headers.get['Content-Type'] = 'application/json;charset=UTF-8';
+axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
+axios.defaults.headers.put['Content-Type'] =
+  'application/x-www-form-urlencoded';
 
 function requestSuccess(config) {
   // 请求开始，开启进度条
   NProgress.start();
-  const cookie = getCookie();
-  if (cookie) {
-    config.headers['Token'] = cookie;
-  }
+
+  const token = Storage.getItem('token');
+  config.headers.common['Authorization'] = `Bearer ${token}`;
+
   return config;
 }
 
@@ -35,14 +39,6 @@ function requestFail(error) {
 function responseSuccess(response) {
   // 请求结束，关闭进度条
   NProgress.done();
-  const { data, status, message } = response.data;
-
-  response.data = {
-    data,
-    code: status,
-    message
-  };
-
   return response.data;
 }
 
@@ -66,13 +62,10 @@ export const request = (config: AxiosRequestConfig) => {
       return response;
     })
     .catch((error) => {
-      if (!error.response) {
-        return console.log('Error', error.message);
-      }
-
-      const status = error.response.status;
-
-      if (status === 401) {
+      let code =
+        error.response && error.response.status ? error.response.status : 502;
+      // token过期, 跳转到登录页
+      if (code === 401) {
         router.push('/user/login');
       }
 
@@ -82,7 +75,7 @@ export const request = (config: AxiosRequestConfig) => {
         error.response
       );
 
-      return { code: status, message: '' };
+      return { code: code, message: '' };
     });
 };
 

@@ -1,13 +1,12 @@
 import React from 'react';
 import { Dropdown, Avatar, Menu, Icon, Spin, Tag } from 'antd';
 import { SelectParam } from 'antd/es/menu';
-import ClassNames from 'classnames';
 import Moment from 'moment';
 import groupBy from 'lodash/groupBy';
-import { FormattedMessage, formatMessage } from 'umi/locale';
+import { FormattedMessage } from 'umi/locale';
 import { currentUserType } from '@/types/user';
-import HeaderSearch, { HeaderSearchProps } from '../HeaderSearch';
-import NoticeIcon, { NoticeIconProps } from '../NoticeIcon';
+import { HeaderSearchProps } from '../HeaderSearch';
+import { NoticeIconProps } from '../NoticeIcon';
 import SelectLang from '../SelectLang';
 import styles from './index.less';
 
@@ -70,73 +69,8 @@ class GlobalHeaderRight extends React.PureComponent<
     return unreadMsg;
   };
 
-  getNoticeDom = () => {
-    const { noticeIcon, currentUser } = this.props;
-
-    if (!noticeIcon || noticeIcon === false) {
-      return null;
-    } else {
-      const {
-        onItemClick,
-        onClear,
-        onPopupVisibleChange,
-        loading
-      } = noticeIcon;
-      const notices: any = this.getNoticeData();
-      const unreadMsg: any = this.getUnreadData(notices);
-
-      return (
-        <NoticeIcon
-          className={styles.action}
-          count={currentUser.unreadCount}
-          onItemClick={onItemClick}
-          locale={{
-            emptyText: formatMessage({ id: 'component.noticeIcon.empty' }),
-            clear: formatMessage({ id: 'component.noticeIcon.clear' })
-          }}
-          onClear={onClear}
-          onPopupVisibleChange={onPopupVisibleChange}
-          loading={loading}
-          clearClose={true}
-        >
-          <NoticeIcon.Tab
-            count={unreadMsg.notification}
-            data={notices.notification}
-            title={formatMessage({ id: 'component.globalHeader.notification' })}
-            name="notification"
-            emptyText={formatMessage({
-              id: 'component.globalHeader.notification.empty'
-            })}
-            emptyImage="https://gw.alipayobjects.com/zos/rmsportal/wAhyIChODzsoKIOBHcBk.svg"
-          />
-          <NoticeIcon.Tab
-            count={unreadMsg.message}
-            data={notices.message}
-            title={formatMessage({ id: 'component.globalHeader.message' })}
-            name="message"
-            emptyText={formatMessage({
-              id: 'component.globalHeader.message.empty'
-            })}
-            emptyImage="https://gw.alipayobjects.com/zos/rmsportal/sAuJeJzSKbUmHfBQRzmZ.svg"
-          />
-          <NoticeIcon.Tab
-            count={unreadMsg.event}
-            data={notices.event}
-            title={formatMessage({ id: 'component.globalHeader.event' })}
-            name="event"
-            emptyText={formatMessage({
-              id: 'component.globalHeader.event.empty'
-            })}
-            emptyImage="https://gw.alipayobjects.com/zos/rmsportal/HsIsxMZiWKrNUavQUXqx.svg"
-          />
-        </NoticeIcon>
-      );
-    }
-  };
   render() {
     const { onMenuClick, currentUser } = this.props;
-
-    const NoticeDom = this.getNoticeDom();
 
     const menu = (
       <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
@@ -154,13 +88,6 @@ class GlobalHeaderRight extends React.PureComponent<
             defaultMessage="account settings"
           />
         </Menu.Item>
-        <Menu.Item key="triggerError">
-          <Icon type="close-circle" />
-          <FormattedMessage
-            id="menu.account.trigger"
-            defaultMessage="Trigger Error"
-          />
-        </Menu.Item>
         <Menu.Divider />
         <Menu.Item key="logout">
           <Icon type="logout" />
@@ -171,7 +98,7 @@ class GlobalHeaderRight extends React.PureComponent<
 
     return (
       <div className={styles.right}>
-        <HeaderSearch
+        {/* <HeaderSearch
           className={ClassNames(styles.action, styles.search)}
           placeholder={formatMessage({ id: 'component.globalHeader.search' })}
           dataSource={[
@@ -185,10 +112,10 @@ class GlobalHeaderRight extends React.PureComponent<
           onPressEnter={(value) => {
             console.log('enter', value);
           }}
-        />
+        /> */}
         {/** 消息通知 */}
-        {NoticeDom}
-        {currentUser.name ? (
+        {/* {NoticeDom} */}
+        {currentUser.id ? (
           <Dropdown overlay={menu}>
             <span className={`${styles.action} ${styles.account}`}>
               <Avatar
@@ -197,7 +124,7 @@ class GlobalHeaderRight extends React.PureComponent<
                 src={currentUser.avatar}
                 alt="avatar"
               />
-              <span className={styles.name}>{currentUser.name}</span>
+              <span className={styles.name}>{currentUser.account}</span>
             </span>
           </Dropdown>
         ) : (

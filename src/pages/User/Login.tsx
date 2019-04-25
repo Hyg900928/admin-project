@@ -53,18 +53,16 @@ class LoginPage extends Component<LoginPageProps, State> {
         <Card>
           <Form onSubmit={this.handleSubmit}>
             <FormItem>
-              {getFieldDecorator('username', {
+              {getFieldDecorator('account', {
                 rules: [
-                  { required: true, message: 'Please input your username!' }
+                  { required: true, message: 'Please input your account!' }
                 ]
-              })(
-                <Input prefix={<Icon type="user" />} placeholder="Username" />
-              )}
+              })(<Input prefix={<Icon type="user" />} placeholder="account" />)}
             </FormItem>
             <FormItem>
-              {getFieldDecorator('password', {
+              {getFieldDecorator('passwd', {
                 rules: [
-                  { required: true, message: 'Please input your Password!' }
+                  { required: true, message: 'Please input your passwd!' }
                 ]
               })(
                 <Input

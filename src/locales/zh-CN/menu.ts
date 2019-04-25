@@ -18,5 +18,10 @@ export default {
   'menu.userManagement.search': '基本用户查询',
   'menu.userManagement.roleSearch': '角色列表查询',
   'menu.userManagement.behaviorLog': '用户行为日志',
-  'menu.userManagement.loginLog': '登录日志'
+  'menu.userManagement.loginLog': '登录日志',
+  // 账号管理
+  'menu.account': '个人管理',
+  'menu.account.center': '个人中心',
+  'menu.account.settings': '个人设置',
+  'menu.account.logout': '退出登录'
 };

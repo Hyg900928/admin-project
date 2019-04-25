@@ -5,9 +5,7 @@ import { connect } from 'dva';
 import Authorized from '@/utils/Authorized';
 import router from 'umi/router';
 
-function AuthComponent({ children, location, routerData, status }) {
-  // console.log(location, routerData, status)
-  const isLogin = status === 'ok';
+function AuthComponent({ children, location, routerData, isLogin }) {
   const getRouteAuthority = (path, routeData) => {
     let authorities: any;
     routeData.forEach((route) => {
@@ -22,7 +20,6 @@ function AuthComponent({ children, location, routerData, status }) {
         }
       }
     });
-    console.log(authorities);
     return authorities;
   };
   return (
@@ -40,7 +37,7 @@ function AuthComponent({ children, location, routerData, status }) {
     </Authorized>
   );
 }
-export default connect(({ menu: menuModel }) => ({
+export default connect(({ menu: menuModel, user }) => ({
   routerData: menuModel.routerData,
-  status: 'ok'
+  isLogin: user.isLogin
 }))(AuthComponent);

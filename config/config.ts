@@ -1,7 +1,7 @@
 import { resolve } from 'path';
 import pageRoutes from './router.config';
 import themeConfig from './theme.config';
-
+const { APP_TYPE, API_ENV } = process.env;
 const plugins = [
   [
     'umi-plugin-react',
@@ -31,10 +31,19 @@ export default {
   targets: {
     ie: 11
   },
+  define: {
+    APP_TYPE: 'Gavin',
+    'process.env': {
+      API_ENV: process.env.API_ENV,
+      NODE_ENV: process.env.NODE_ENV
+    }
+  },
+  treeShaking: true,
   // 路由配置
   routes: pageRoutes,
   theme: themeConfig,
   ignoreMomentLocale: true,
+  disableRedirectHoist: true,
   urlLoaderExcludes: [resolve(__dirname, '../src/icons/svg')],
   chainWebpack(config) {
     config.module

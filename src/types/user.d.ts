@@ -3,15 +3,22 @@ export type tagType = {
   label: string;
 };
 
+// export interface currentUserType {
+//   name: string;
+//   realName: string;
+//   unreadCount: number;
+//   avatar: string;
+//   email: string;
+//   phone: string;
+//   signature: string;
+//   title: string;
+//   group: string;
+//   tags: tagType[];
+// }
+
 export interface currentUserType {
-  name: string;
-  realName: string;
-  unreadCount: number;
+  account: string;
+  id: string;
+  roles: Array<any>;
   avatar: string;
-  email: string;
-  phone: string;
-  signature: string;
-  title: string;
-  group: string;
-  tags: tagType[];
 }

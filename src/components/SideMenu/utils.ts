@@ -20,6 +20,10 @@ export const getMenuMatches = (flatMenuKeys, path) =>
     return false;
   });
 
+/**
+ * 获得菜单子节点
+ * @memberof SiderMenu
+ */
 export const getDefaultCollapsedSubMenus = (props) => {
   const {
     location: { pathname },
@@ -27,5 +31,6 @@ export const getDefaultCollapsedSubMenus = (props) => {
   } = props;
   return urlToList(pathname)
     .map((item) => getMenuMatches(flatMenuKeys, item)[0])
-    .filter((item) => item);
+    .filter((item) => item)
+    .reduce((acc, curr) => [...acc, curr], ['/']);
 };

@@ -1,6 +1,6 @@
-export function urlToList(url: string) {
-  const urlList = url.split('/').filter((i) => i);
-  return urlList.map(
-    (urlItem, index) => `/${urlList.slice(0, index + 1).join('/')}`
+export function urlToList(url) {
+  const urllist = url.split('/').filter((i) => i);
+  return urllist.map(
+    (urlItem, index) => `/${urllist.slice(0, index + 1).join('/')}`
   );
 }

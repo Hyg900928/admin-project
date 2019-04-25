@@ -1,15 +1,20 @@
 {
-  "extends": [
-
-  ],
+  "extends": ["tslint:latest", "tslint-react", "tslint-config-prettier"],
   "jsRules": {
     "max-line-length": {
       "options": [120]
     }
   },
+  "rules": {
+    "no-var-requires": false,
+    "no-submodule-imports": false,
+    "object-literal-sort-keys": false,
+    "jsx-no-lambda": false,
+    "no-implicit-dependencies": false,
+    "no-console": false,
+    "ordered-imports": [false]
+  },
   "linterOptions": {
-    "exclude": [
-      "./dist/*"
-    ]
+    "exclude": ["./dist/*"]
   }
 }

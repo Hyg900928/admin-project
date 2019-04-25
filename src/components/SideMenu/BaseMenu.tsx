@@ -1,7 +1,5 @@
 import React from 'react';
 import H from 'history';
-import MemoizeOne from 'memoize-one';
-import isEqual from 'lodash/isEqual';
 import { Menu, Icon } from 'antd';
 import { Link } from 'react-router-dom';
 import { MenuMode } from 'antd/es/menu';
@@ -41,7 +39,6 @@ export interface BaseMenuProps {
 class BaseMenu extends React.PureComponent<BaseMenuProps, any> {
   constructor(props) {
     super(props);
-    this.getSelectedMenuKeys = MemoizeOne(this.getSelectedMenuKeys, isEqual);
   }
 
   // 获取菜单子节点
