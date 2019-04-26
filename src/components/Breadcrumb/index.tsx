@@ -130,7 +130,7 @@ class LotusBreadcrumb extends React.PureComponent<LotusBreadcrumbProps, any> {
           {breadcrumbList.map((item) => {
             const title = itemRender ? itemRender(item) : item.title;
             return (
-              <Breadcrumb.Item>
+              <Breadcrumb.Item key={item as any}>
                 {item.href
                   ? React.createElement(
                       linkElement as any,

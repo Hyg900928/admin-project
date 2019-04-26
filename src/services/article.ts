@@ -1,5 +1,9 @@
-import { GET } from '@/utils/request';
+import { GET, POST } from '@/utils/request';
 
 export async function fetchList() {
-  return GET('/article/list');
+  return GET('/api/v1/articles');
+}
+
+export async function createArticle(data: any) {
+  return POST('/api/v1/article', data);
 }

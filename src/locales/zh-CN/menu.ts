@@ -23,5 +23,9 @@ export default {
   'menu.account': '个人管理',
   'menu.account.center': '个人中心',
   'menu.account.settings': '个人设置',
-  'menu.account.logout': '退出登录'
+  'menu.account.logout': '退出登录',
+  // 文章
+  'menu.article': '文章管理',
+  'menu.article.articleList': '文章列表',
+  'menu.article.articleCreate': '创建文章'
 };

@@ -19,5 +19,9 @@ export default {
   'menu.account': 'Account',
   'menu.account.center': 'Account Center',
   'menu.account.settings': 'Account Settings',
-  'menu.account.logout': 'Logout'
+  'menu.account.logout': 'Logout',
+  // 文章
+  'menu.article': 'article',
+  'menu.article.articleList': 'articleList',
+  'menu.article.articleCreate': 'articleCreate'
 };

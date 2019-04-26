@@ -1,3 +1,5 @@
+import Storage from '@/utils/storage';
+
 /**
  * 检查 `value` 是否为承诺（Promise）
  *
@@ -26,4 +28,13 @@ export function isPromise(value: any): value is Promise<any> {
  */
 export function isDefined(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+/**
+ *
+ * 获取用户ID
+ * @export
+ */
+export function getUserId(): string {
+  return Storage.getItem('userId');
 }

@@ -99,8 +99,25 @@ export default [
           }
         ]
       },
-      // 用户管理模块
-      {},
+      // 文章管理
+      {
+        name: 'article',
+        icon: 'book',
+        path: '/article',
+        routes: [
+          {
+            path: '/article/list',
+            name: 'articleList',
+            component: './Article/ArticleList'
+          },
+          {
+            path: '/article/create',
+            name: 'articleCreate',
+            hideInMenu: true,
+            component: './Article/CreateArticle'
+          }
+        ]
+      },
       {
         component: './404'
       }

@@ -5,7 +5,7 @@
   "scripts": {
     "bootstrap": "yarn || npm i",
     "clean": "rimraf dist",
-    "start": "cross-env API_ENV=test  PORT=8080 umi dev",
+    "start": "cross-env  API_ENV=test DEBUG=app:* PORT=8080 MOCK=none  umi dev",
     "build": "umi build",
     "build:web": "umi build && cd ./dist && serve -s ",
     "lint-staged": "lint-staged",
@@ -26,6 +26,7 @@
     "bizcharts-plugin-slider": "^2.1.1-beta.1",
     "braft-editor": "^2.1.36",
     "classnames": "^2.2.6",
+    "debug": "^4.1.1",
     "dva": "^2.4.1",
     "js-cookie": "^2.2.0",
     "lodash": "^4.17.10",
