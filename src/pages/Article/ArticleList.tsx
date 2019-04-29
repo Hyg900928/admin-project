@@ -23,14 +23,20 @@ class ArticleList extends Component<ArticleListProps, any> {
         dataIndex: 'title'
       },
       {
-        title: '内容',
-        dataIndex: 'content'
-      },
-      {
         title: '发布时间',
         dataIndex: 'createAt',
         render: (text, record) => {
           return moment(text).format('YYYY-DD-MM HH:mm');
+        }
+      },
+      {
+        title: '作者',
+        dataIndex: 'author.account'
+      },
+      {
+        title: '操作',
+        render: (text, record) => {
+          return <Button type="primary">编辑</Button>;
         }
       }
     ];

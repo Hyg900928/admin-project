@@ -60,6 +60,7 @@ export default {
   reducers: {
     saveCurrentUser(state, { payload }) {
       Storage.setItem('userId', payload.id);
+      Storage.setItem('userAccount', payload.account);
       setAuthority(payload.roles);
       return {
         ...state,

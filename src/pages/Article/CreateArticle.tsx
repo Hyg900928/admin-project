@@ -22,7 +22,7 @@ interface CreateFormProps extends FormComponentProps {
 interface FormData {
   title: string;
   content: string | any;
-  classify: string;
+  tags: Array<any>;
 }
 
 @connect(({ createArticle, loading }) => ({
@@ -47,8 +47,8 @@ class CreateArticle extends Component<CreateFormProps, any> {
       if (!err) {
         const submitData: FormData = {
           title: values.title,
-          content: values.content.toRAW(), // or values.content.toHTML()
-          classify: values.classify
+          content: values.content.toRAW(), // or values.content.toRAW()
+          tags: values.tags
         };
         this.postData(submitData);
       }
@@ -67,22 +67,6 @@ class CreateArticle extends Component<CreateFormProps, any> {
       type: 'createArticle/create',
       payload: sendData
     });
-  };
-  componentDidMount() {
-    // this.setState({
-    //   editorState: BraftEditor.createEditorState('Hello world')
-    // })
-  }
-  submitContent = async () => {
-    // 在编辑器获得焦点时按下ctrl+s会执行此方法
-    // 编辑器内容提交到服务端之前，可直接调用editorState.toHTML()来获取HTML格式的内容
-    const htmlContent = this.state.editorState.toHTML();
-    console.log(htmlContent);
-    // const result = await saveEditorContent(htmlContent)
-  };
-
-  handleEditorChange = (editorState) => {
-    this.setState({ editorState });
   };
   render() {
     const {
@@ -139,18 +123,24 @@ class CreateArticle extends Component<CreateFormProps, any> {
                 initialValue: ''
               })(<Input placeholder="标题(最多60个字符)" />)}
             </FormItem>
-            <FormItem {...formItemLayout} label="分类" hasFeedback>
-              {getFieldDecorator('classify', {
+            <FormItem {...formItemLayout} label="标签">
+              {getFieldDecorator('tags', {
                 rules: [
                   {
                     required: true,
-                    message: '请选择分类'
+                    message: '请选择标签'
                   }
                 ],
-                initialValue: ''
+                initialValue: []
               })(
-                <Select onChange={this.onChange} placeholder="选择一个分类">
-                  <Option value="5cc2acd573c4c072f079c9d2">lisi</Option>
+                <Select
+                  mode="multiple"
+                  onChange={this.onChange}
+                  placeholder="选择标签"
+                >
+                  <Option key="a" value="5cc68c43930b52e70c6d0bc5">
+                    React
+                  </Option>
                 </Select>
               )}
             </FormItem>

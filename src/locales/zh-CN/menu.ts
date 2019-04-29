@@ -27,5 +27,8 @@ export default {
   // 文章
   'menu.article': '文章管理',
   'menu.article.articleList': '文章列表',
-  'menu.article.articleCreate': '创建文章'
+  'menu.article.articleCreate': '创建文章',
+  // 标签
+  'menu.tags': '标签管理',
+  'menu.tags.tagList': '标签列表'
 };

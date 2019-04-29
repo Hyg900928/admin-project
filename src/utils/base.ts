@@ -38,3 +38,11 @@ export function isDefined(value: any): boolean {
 export function getUserId(): string {
   return Storage.getItem('userId');
 }
+/**
+ * 获取用户名
+ * @export
+ * @returns {string}
+ */
+export function getAccount(): string {
+  return Storage.getItem('userAccount');
+}

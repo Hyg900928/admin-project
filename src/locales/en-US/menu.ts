@@ -23,5 +23,8 @@ export default {
   // 文章
   'menu.article': 'article',
   'menu.article.articleList': 'articleList',
-  'menu.article.articleCreate': 'articleCreate'
+  'menu.article.articleCreate': 'articleCreate',
+  // 标签
+  'menu.tags': 'tags',
+  'menu.tags.tagList': 'tagList'
 };

@@ -118,6 +118,19 @@ export default [
           }
         ]
       },
+      // 标签
+      {
+        name: 'tags',
+        icon: 'book',
+        path: '/tags',
+        routes: [
+          {
+            path: '/tags/tagList',
+            name: 'tagList',
+            component: './Tags/TagList'
+          }
+        ]
+      },
       {
         component: './404'
       }
