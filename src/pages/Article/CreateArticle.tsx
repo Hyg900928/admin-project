@@ -17,7 +17,7 @@ const Option = Select.Option;
 interface CreateFormProps extends FormComponentProps {
   dispatch: any;
   loading: boolean;
-  data: any;
+  data?: any;
 }
 interface FormData {
   title: string;
@@ -71,8 +71,10 @@ class CreateArticle extends Component<CreateFormProps, any> {
   render() {
     const {
       form: { getFieldDecorator },
-      loading
+      loading,
+      data
     } = this.props;
+    const { tagsList } = data;
     // 获取富文本内容 包含DOm结构和样式
     // console.log(this.props)
     // 表单布局
@@ -138,9 +140,13 @@ class CreateArticle extends Component<CreateFormProps, any> {
                   onChange={this.onChange}
                   placeholder="选择标签"
                 >
-                  <Option key="a" value="5cc68c43930b52e70c6d0bc5">
-                    React
-                  </Option>
+                  {tagsList.map((el) => {
+                    return (
+                      <Option key={el._id} value={el._id}>
+                        {el.title}
+                      </Option>
+                    );
+                  })}
                 </Select>
               )}
             </FormItem>

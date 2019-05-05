@@ -1,35 +1,47 @@
-import { fetchList, createArticle } from '@/services/article';
+import { createArticle } from '@/services/article';
+import { getTagList } from '@/services/tag';
 import { routerRedux } from 'dva/router';
+import { Model } from 'dva';
 import { message } from 'antd';
 import _debug from 'debug';
 
 const debug = _debug('app:models:createArticle');
 
+// const defaultState = {
+//   articleData: {},
+//   tagsList: []
+// }
+
 export default {
   namespace: 'createArticle',
   state: {
-    articleData: {}
+    articleData: {},
+    tagsList: []
   },
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen((location) => {
-        if (location.pathname === '/article/list') {
+        if (location.pathname === '/article/create') {
+          dispatch({
+            type: 'query',
+            payload: {}
+          });
         }
       });
     }
   },
   effects: {
-    *getArticleList({ payload }, { call, put }) {
-      const res = yield call(fetchList);
-      debug(res);
+    *query({ payload }, { call, put }) {
+      const res = yield call(getTagList);
       if (res.code === 0) {
         yield put({
           type: 'onChangeState',
           payload: {
-            articleList: res.data
+            tagsList: res.data
           }
         });
       }
+      // debug(res.data)
     },
     *create({ payload }, { call, put }) {
       const res = yield call(createArticle, payload);
@@ -42,11 +54,17 @@ export default {
   },
 
   reducers: {
+    resetState(state, { payload }) {
+      return {
+        ...state,
+        ...payload
+      };
+    },
     onChangeState(state, { payload }) {
       return {
         ...state,
-        articleList: payload.articleList
+        tagsList: payload.tagsList
       };
     }
   }
-};
+} as Model;

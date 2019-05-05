@@ -64,8 +64,8 @@ class TagList extends Component<TagListProps, any> {
             ++新增标签
           </Button>
           <TagTable data={tagList} />
+          <CreateTagModal {...modalProps} />
         </PageWrapperHeader>
-        <CreateTagModal {...modalProps} />
       </div>
     );
   }

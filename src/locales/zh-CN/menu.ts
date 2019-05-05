@@ -15,7 +15,8 @@ export default {
   'menu.permission.log': '操作日志',
   // 用户管理
   'menu.userManagement': '用户管理',
-  'menu.userManagement.search': '基本用户查询',
+  'menu.userManagement.userList': '用户列表',
+  'menu.userManagement.addUser': '添加用户',
   'menu.userManagement.roleSearch': '角色列表查询',
   'menu.userManagement.behaviorLog': '用户行为日志',
   'menu.userManagement.loginLog': '登录日志',

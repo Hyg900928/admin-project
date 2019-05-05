@@ -24,6 +24,7 @@ export default {
     *getArticleList({ payload }, { call, put }) {
       const res = yield call(fetchList);
       debug(res);
+      // debug('tagList', tagList)
       if (res.code === 0) {
         yield put({
           type: 'onChangeState',

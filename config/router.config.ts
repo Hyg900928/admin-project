@@ -93,9 +93,14 @@ export default [
         path: '/userManagement',
         routes: [
           {
-            path: '/userManagement/search',
-            name: 'search',
-            component: './UserManagement/search/search'
+            path: '/userManagement/userList',
+            name: 'userList',
+            component: './UserManagement/UserList'
+          },
+          {
+            path: '/userManagement/addUser',
+            name: 'addUser',
+            component: './UserManagement/AddUser'
           }
         ]
       },

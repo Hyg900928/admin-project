@@ -1,3 +1,5 @@
+@import '~antd/lib/style/themes/default.less';
+
 html,
 body,
 #root {
@@ -36,4 +38,10 @@ ol {
   button + button {
     margin-left: 8px;
   }
+}
+.content {
+  background: #fff;
+  padding: 24px;
+  box-shadow: @shadow-2;
+  min-height: e('calc(100vh - 184px)');
 }
