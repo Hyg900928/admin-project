@@ -5,20 +5,26 @@ export default [
     component: '../layouts/UserLayout',
     routes: [
       { path: '/user', redirect: '/user/login' },
-      { path: '/user/login', component: './User/Login' },
+      { path: '/user/login', name: 'login', component: './User/Login' },
       {
         component: './404'
       }
     ]
   },
   // app
+  // {
+  //   path: '/',
+  //   component:'../layouts/BlackLayout',
+  //   Routes: ['src/pages/Authorized']
+  //   routes: []
+  // },
   {
     path: '/',
-    component: '../layouts/BasicLayout',
+    component: '../layouts/AuthBasicLayout',
     Routes: ['src/pages/Authorized'], // 权限路由
-    authority: ['admin', 'user'], // 准入权限
+    // authority: ['admin', 'user'], // 准入权限
     routes: [
-      { path: '/', redirect: '/system/userInfo' },
+      { path: '/', redirect: '/system/userInfo', authority: ['admin', 'user'] },
       {
         name: 'exception',
         icon: 'warning',

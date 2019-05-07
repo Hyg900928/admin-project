@@ -1,4 +1,5 @@
 import { fetchList } from '@/services/article';
+import { routerRedux } from 'dva/router';
 import _debug from 'debug';
 
 const debug = _debug('app:models:article');
@@ -33,6 +34,17 @@ export default {
           }
         });
       }
+    },
+    *changeArticleType({ payload }, { put }) {
+      yield put({
+        type: 'createArticle/onChangeState',
+        payload: {
+          articleData: payload.articleData
+        }
+      });
+      yield put(
+        routerRedux.push(`/article/create?id=${payload.articleData._id}`)
+      );
     }
   },
 

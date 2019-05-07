@@ -7,3 +7,7 @@ export async function fetchList() {
 export async function createArticle(data: any) {
   return POST('/api/v1/article', data);
 }
+
+export async function getArticleInfo(id: string) {
+  return GET(`/api/v1/article/${id}`);
+}

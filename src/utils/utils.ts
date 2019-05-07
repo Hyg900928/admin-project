@@ -1,4 +1,4 @@
-import { parse, stringify } from 'qs';
+import { parse } from 'qs';
 
 export function getPageQuery(data?: string) {
   let url = data || window.location.href.split('?')[1];

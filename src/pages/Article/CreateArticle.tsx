@@ -3,13 +3,16 @@ import { connect } from 'dva';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import { Card, Form, Input, Button, Select } from 'antd';
 import { FormComponentProps } from 'antd/lib/form/Form';
+import { ArticleList } from '@/types/article';
 
 // 引入编辑器组件
 import BraftEditor, { ControlType } from 'braft-editor';
 import { getUserId } from '@/utils/base';
+import { getPageQuery } from '@/utils/utils';
 // 引入编辑器样式
 import 'braft-editor/dist/index.css';
 import styles from './article.less';
+// import createArticle from './models/createArticle';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -17,18 +20,14 @@ const Option = Select.Option;
 interface CreateFormProps extends FormComponentProps {
   dispatch: any;
   loading: boolean;
-  data?: any;
+  data: ArticleList.CreateArticleState;
 }
-interface FormData {
-  title: string;
-  content: string | any;
-  tags: Array<any>;
-}
+// interface FormData extends  {
+//   title: string;
+//   content: string | any;
+//   tags: Array<any>;
+// }
 
-@connect(({ createArticle, loading }) => ({
-  data: createArticle,
-  loading: loading.effects['createArticle/create']
-}))
 class CreateArticle extends Component<CreateFormProps, any> {
   constructor(props: CreateFormProps) {
     super(props);
@@ -37,17 +36,25 @@ class CreateArticle extends Component<CreateFormProps, any> {
       editorState: BraftEditor.createEditorState(null)
     };
   }
+  static getDerivedStateFromProps(nextProps: CreateFormProps, preState: any) {
+    return {
+      editorState: BraftEditor.createEditorState(
+        nextProps.data.articleData.html
+      )
+    };
+  }
+
   handleSubmit = (e: React.MouseEvent): void => {
     const {
       form: { validateFieldsAndScroll }
     } = this.props;
 
     e && e.preventDefault();
-    validateFieldsAndScroll((err, values: FormData) => {
+    validateFieldsAndScroll((err, values: ArticleList.AsObject) => {
       if (!err) {
-        const submitData: FormData = {
+        const submitData: ArticleList.AsObject = {
           title: values.title,
-          content: values.content.toRAW(), // or values.content.toRAW()
+          content: values.content.toHTML(), // or values.content.toRAW()
           tags: values.tags
         };
         this.postData(submitData);
@@ -57,7 +64,7 @@ class CreateArticle extends Component<CreateFormProps, any> {
   onChange = (val) => {
     console.log(val);
   };
-  postData = (values: FormData): void => {
+  postData = (values: ArticleList.AsObject): void => {
     const { dispatch } = this.props;
     const sendData = {
       ...values,
@@ -74,7 +81,10 @@ class CreateArticle extends Component<CreateFormProps, any> {
       loading,
       data
     } = this.props;
+    const { editorState } = this.state;
+    const { articleData } = data;
     const { tagsList } = data;
+
     // 获取富文本内容 包含DOm结构和样式
     // console.log(this.props)
     // 表单布局
@@ -122,7 +132,7 @@ class CreateArticle extends Component<CreateFormProps, any> {
                     message: '请输入标题'
                   }
                 ],
-                initialValue: ''
+                initialValue: articleData.title
               })(<Input placeholder="标题(最多60个字符)" />)}
             </FormItem>
             <FormItem {...formItemLayout} label="标签">
@@ -133,7 +143,7 @@ class CreateArticle extends Component<CreateFormProps, any> {
                     message: '请选择标签'
                   }
                 ],
-                initialValue: []
+                initialValue: articleData.tags
               })(
                 <Select
                   mode="multiple"
@@ -164,7 +174,8 @@ class CreateArticle extends Component<CreateFormProps, any> {
                       }
                     }
                   }
-                ]
+                ],
+                initialValue: BraftEditor.createEditorState(articleData.content)
               })(
                 <BraftEditor
                   className={styles['custom-editor']}
@@ -193,4 +204,12 @@ class CreateArticle extends Component<CreateFormProps, any> {
   }
 }
 
-export default Form.create()(CreateArticle);
+const FormCom = Form.create<CreateFormProps>({
+  mapPropsToFields(props) {
+    console.log(props);
+  }
+})(CreateArticle);
+export default connect(({ createArticle, loading }) => ({
+  data: createArticle,
+  loading: loading.effects['createArticle/create']
+}))(FormCom);

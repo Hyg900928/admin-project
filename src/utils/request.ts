@@ -1,5 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios';
-import router from 'umi/router';
+// import router from 'umi/router';
+import { notification } from 'antd';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 import { AXIOS_DEFAULT_CONFIG } from '@/config';
@@ -66,7 +67,14 @@ export const request = (config: AxiosRequestConfig) => {
         error.response && error.response.status ? error.response.status : 502;
       // token过期, 跳转到登录页
       if (code === 401) {
-        router.push('/user/login');
+        notification.error({
+          message: '未登录或登录已过期，请重新登录。'
+        });
+        window.g_app._store.dispatch({
+          type: 'login/logout'
+        });
+        return false;
+        // router.push('/user/login');
       }
 
       // 开发调试

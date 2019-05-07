@@ -8,6 +8,7 @@ import { isUrl } from '@/utils/regexp';
 import { urlToList } from '@/utils/pathTools';
 import { MenuTheme } from '@/types/settings';
 import { getMenuMatches } from './utils';
+import { settingsModelState } from '@/types/settings';
 import styles from './index.less';
 
 // 获取Icon图标
@@ -24,19 +25,23 @@ function getIcon(icon) {
 const { SubMenu } = Menu;
 
 export interface BaseMenuProps {
-  openKeys?: string[];
+  openKeys?: any;
   theme?: MenuTheme;
   mode?: MenuMode;
   flatMenuKeys?: any[];
   location: H.Location;
+  collapsed?: boolean;
   style?: React.CSSProperties;
+  handleOpenChange?: (openKeys: any[]) => void;
   menuData: any[];
   isMobile: boolean;
-  onCollapse: (collapsed: boolean, type?: CollapseType) => void;
+  onCollapse?: (collapsed: boolean, type?: CollapseType) => void;
   onOpenChange?: (openKeys: string[]) => void;
+  setting: settingsModelState;
 }
 
 class BaseMenu extends React.PureComponent<BaseMenuProps, any> {
+  public wrap: any;
   constructor(props) {
     super(props);
   }
@@ -119,6 +124,15 @@ class BaseMenu extends React.PureComponent<BaseMenuProps, any> {
     }
     return `/${path || ''}`.replace(/\/+/g, '/');
   };
+  getPopupContainer = (fixedHeader, layout) => {
+    if (fixedHeader && layout === 'topmenu') {
+      return this.wrap;
+    }
+    return document.body;
+  };
+  getRef = (ref) => {
+    this.wrap = ref;
+  };
 
   getSelectedMenuKeys = (pathname) => {
     const { flatMenuKeys } = this.props;
@@ -132,35 +146,41 @@ class BaseMenu extends React.PureComponent<BaseMenuProps, any> {
       openKeys,
       theme,
       mode,
+      collapsed,
       location: { pathname },
-      onOpenChange,
+      handleOpenChange,
       style,
-      menuData
+      menuData,
+      setting: { fixedHeader, layout }
     } = this.props;
     let selectedKeys = this.getSelectedMenuKeys(pathname);
     if (!selectedKeys.length && openKeys) {
       selectedKeys = [openKeys[openKeys.length - 1]];
     }
     let props = {};
-    if (openKeys) {
+    if (openKeys && !collapsed) {
       props = {
-        openKeys
+        openKeys: openKeys.length === 0 ? [...selectedKeys] : openKeys
       };
     }
 
     return (
-      <Menu
-        key="Menu"
-        mode={mode}
-        theme={theme}
-        onOpenChange={onOpenChange}
-        selectedKeys={selectedKeys}
-        style={style}
-        className={mode === 'horizontal' ? 'top-nav-menu' : ''}
-        {...props}
-      >
-        {this.getNavMenuItems(menuData)}
-      </Menu>
+      <>
+        <Menu
+          key="Menu"
+          mode={mode}
+          theme={theme}
+          onOpenChange={handleOpenChange}
+          selectedKeys={selectedKeys}
+          style={style}
+          className={mode === 'horizontal' ? 'top-nav-menu' : ''}
+          {...props}
+          getPopupContainer={() => this.getPopupContainer(fixedHeader, layout)}
+        >
+          {this.getNavMenuItems(menuData)}
+        </Menu>
+        <div ref={this.getRef} />
+      </>
     );
   }
 }

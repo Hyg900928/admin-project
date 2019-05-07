@@ -9,4 +9,6 @@ export interface settingsModelState {
   fixedHeader: boolean;
   autoHideHeader: boolean;
   fixSideBar: boolean;
+  title: string;
+  pwa: boolean;
 }

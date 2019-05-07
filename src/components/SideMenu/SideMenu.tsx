@@ -1,11 +1,12 @@
 import React from 'react';
 import { Layout } from 'antd';
 import ClassNames from 'classnames';
-import BaseMenu, { BaseMenuProps } from './BaseMenu';
+import { BaseMenuProps } from './BaseMenu';
 import PageLoading from '../PageLoading';
 import { getDefaultCollapsedSubMenus } from './utils';
 import styles from './index.less';
 
+const BaseMenu = React.lazy(() => import('./BaseMenu'));
 const { Sider } = Layout;
 
 export interface SideMenuProps extends BaseMenuProps {
@@ -75,7 +76,7 @@ class SideMenu extends React.PureComponent<SideMenuProps, State> {
         collapsible
         collapsed={collapsed}
         onCollapse={(collapse) => {
-          if (firstMount || isMobile) {
+          if (firstMount || !isMobile) {
             onCollapse(collapse);
           }
         }}
@@ -90,6 +91,7 @@ class SideMenu extends React.PureComponent<SideMenuProps, State> {
           <BaseMenu
             {...this.props}
             mode="inline"
+            handleOpenChange={this.handleOpenChange}
             onOpenChange={this.handleOpenChange}
             style={{ padding: '16px 0', width: '100%' }}
             {...defaultProps}

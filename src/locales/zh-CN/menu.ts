@@ -1,4 +1,5 @@
 export default {
+  'menu.login': '登录',
   'menu.home': '首页',
   'menu.exception': '异常页',
   'menu.exception.not-permission': '403',

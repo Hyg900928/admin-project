@@ -5,15 +5,18 @@ import DocumentTitle from 'react-document-title';
 import { ContainerQuery } from 'react-container-query';
 import PathToRegexp from 'path-to-regexp';
 import { connect } from 'dva';
+import classNames from 'classnames';
 import { formatMessage } from 'umi/locale';
 import Media from 'react-media';
 import { Dispatch } from 'redux';
 import SideMenu from '@/components/SideMenu';
 import { settingsModelState } from '@/types/settings';
+import getPageTitle from '@/utils/getPageTitle';
 import Context from './MenuContext';
 import Header from './Header';
 import Footer from './Footer';
 import logo from '../assets/logo.svg';
+// import AuthBasicLayout from './AuthBasicLayout'
 
 const { Content } = Layout;
 
@@ -47,6 +50,7 @@ export interface BasicLayoutProps {
   route: {
     routes: any[];
     path: string;
+    authority: string | string[];
     component: React.ReactNode;
   };
   dispatch: Dispatch<any>;
@@ -64,7 +68,7 @@ interface State {
 }
 
 class BasicLayout extends React.PureComponent<BasicLayoutProps, State> {
-  private readonly breadcrumbNameMap: object;
+  // private readonly breadcrumbNameMap: object;
   readonly state: State = {
     rendering: true
   };
@@ -72,42 +76,21 @@ class BasicLayout extends React.PureComponent<BasicLayoutProps, State> {
   componentDidMount() {
     const {
       dispatch,
-      route: { routes }
+      route: { routes, path, authority }
     } = this.props;
-    // 获取当前用户信息
+    // // 获取当前用户信息
+    // dispatch({
+    //   type: 'user/fetchCurrent'
+    // });
     dispatch({
-      type: 'user/fetchCurrent'
+      type: 'setting/getSetting'
     });
     // 获取菜单数据
     dispatch({
       type: 'menu/getMenuData',
-      payload: { routes }
+      payload: { routes, path, authority }
     });
   }
-
-  matchParamsPath = (pathname: string) => {
-    const { breadcrumbNameMap } = this.props;
-    const pathKey = Object.keys(breadcrumbNameMap).find((key) =>
-      PathToRegexp(key).test(pathname)
-    );
-    return breadcrumbNameMap[pathKey];
-  };
-
-  getPageTitle = (pathname: string) => {
-    const currRouterData = this.matchParamsPath(pathname);
-
-    if (!currRouterData) {
-      return 'Ant Design Pro';
-    }
-
-    const message = formatMessage({
-      id: currRouterData.locale || currRouterData.name,
-      defaultMessage: currRouterData.name
-    });
-
-    return `${message} - Ant Design Pro`;
-  };
-
   getContext() {
     const { location, breadcrumbNameMap } = this.props;
     return {
@@ -151,27 +134,29 @@ class BasicLayout extends React.PureComponent<BasicLayoutProps, State> {
 
   render() {
     const {
-      setting: { navTheme },
+      setting: { navTheme, layout: PropsLayout },
       children,
       menuData,
+      breadcrumbNameMap,
       isMobile,
       setting,
       collapsed,
       location: { pathname }
     } = this.props;
-    const pageTitle = this.getPageTitle(pathname);
-
+    const isTop = PropsLayout === 'topMenu';
     const layout = (
       <Layout>
-        {isMobile ? null : (
-          <SideMenu
-            logo={logo}
-            theme={navTheme}
-            onCollapse={this.handleMenuCollapse}
-            menuData={menuData}
-            isMobile={isMobile}
-            {...this.props}
-          />
+        {isTop && !isMobile ? null : (
+          <div>
+            <SideMenu
+              logo={logo}
+              theme={navTheme}
+              onCollapse={this.handleMenuCollapse}
+              menuData={menuData}
+              isMobile={isMobile}
+              {...this.props}
+            />
+          </div>
         )}
         <Layout
           style={{
@@ -194,16 +179,22 @@ class BasicLayout extends React.PureComponent<BasicLayoutProps, State> {
 
     return (
       <React.Fragment>
-        <DocumentTitle title={pageTitle}>
-          <Context.Provider value={this.getContext()}>
+        <DocumentTitle title={getPageTitle(pathname, breadcrumbNameMap)}>
+          <ContainerQuery query={query}>
+            {(params) => (
+              <Context.Provider value={this.getContext()}>
+                <div className={classNames(params)}>{layout}</div>
+              </Context.Provider>
+            )}
+          </ContainerQuery>
+          {/* <Context.Provider value={this.getContext()}>
             <div>{layout}</div>
-          </Context.Provider>
+          </Context.Provider> */}
         </DocumentTitle>
       </React.Fragment>
     );
   }
 }
-
 export default connect(({ global, setting, menu }) => ({
   collapsed: global.collapsed,
   layout: setting.layout,
@@ -215,3 +206,9 @@ export default connect(({ global, setting, menu }) => ({
     {(isMobile) => <BasicLayout {...props} isMobile={isMobile} />}
   </Media>
 ));
+{
+  /* <BasicLayout {...props} isMobile={isMobile} /> */
+}
+// const NewCom = wrapperBasicLayout(Com)
+
+// export default  NewCom

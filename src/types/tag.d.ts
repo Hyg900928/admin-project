@@ -1,5 +1,3 @@
-import { Data } from 'unist';
-
 // export interface TagType {
 //   title: string;
 //   value: string;

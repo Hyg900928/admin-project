@@ -13,7 +13,7 @@ type Secured = (
 type check = <T extends IReactComponent, S extends IReactComponent>(
   authority: authority,
   target: T,
-  Exception: S
+  Exception?: S
 ) => T | S;
 
 export interface IAuthorizedProps {

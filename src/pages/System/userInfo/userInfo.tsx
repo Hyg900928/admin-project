@@ -1,5 +1,5 @@
 import React from 'react';
-import PageHeaderWrapper from '@/components/PageHeaderWrapper';
+// import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
 import _debug from 'debug';
 
@@ -9,11 +9,7 @@ debug(APP_TYPE);
 debug(process.env);
 class Users extends React.PureComponent {
   render() {
-    return (
-      <PageHeaderWrapper>
-        <div>用户信息</div>
-      </PageHeaderWrapper>
-    );
+    return <div>用户信息</div>;
   }
 }
 

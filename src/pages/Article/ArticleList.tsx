@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
 import { Table, Card, Row, Col, Button } from 'antd';
+import { ColumnProps } from 'antd/lib/table';
+import { ArticleList } from '@/types/article';
 import moment from 'moment';
 import { connect } from 'dva';
 import router from 'umi/router';
+import { resolve } from 'url';
+import { reject } from 'q';
 
 interface ArticleListProps {
   location?: any;
@@ -15,9 +19,20 @@ class ArticleList extends Component<ArticleListProps, any> {
   handleCreate = () => {
     router.push('/article/create');
   };
+  handleEdit = (id: string): void => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'article/changeArticleType',
+      payload: {
+        articleData: {
+          _id: id
+        }
+      }
+    });
+  };
   render() {
     const { article, loading } = this.props;
-    const columns: Array<any> = [
+    const columns: ColumnProps<ArticleList.AsObject>[] = [
       {
         title: '标题',
         dataIndex: 'title'
@@ -36,7 +51,11 @@ class ArticleList extends Component<ArticleListProps, any> {
       {
         title: '操作',
         render: (text, record) => {
-          return <Button type="primary">编辑</Button>;
+          return (
+            <Button type="primary" onClick={() => this.handleEdit(record._id)}>
+              编辑
+            </Button>
+          );
         }
       }
     ];

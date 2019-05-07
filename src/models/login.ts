@@ -69,14 +69,17 @@ export default {
         }
       });
       reloadAuthorized();
-      yield put(
-        routerRedux.replace({
-          pathname: '/user/login',
-          search: stringify({
-            redirect: window.location.href
+      const { redirect } = getPageQuery();
+      if (window.location.pathname !== '/user/login' && !redirect) {
+        yield put(
+          routerRedux.replace({
+            pathname: '/user/login',
+            search: stringify({
+              redirect: window.location.href
+            })
           })
-        })
-      );
+        );
+      }
     }
   },
 
