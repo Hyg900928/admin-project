@@ -12,17 +12,40 @@ interface AuthBasicLayoutProps {
 }
 
 class AuthBasicLayout extends React.Component<AuthBasicLayoutProps, any> {
-  componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'user/fetchCurrent'
-    });
+  state = {
+    loading: true
+  };
+  async componentDidMount() {
+    const res: any = await this.fetuser();
+    if (res.id) {
+      this.setState({
+        loading: false
+      });
+    }
   }
+  fetuser = async () => {
+    const { dispatch } = this.props;
+    return new Promise((resolve, reject) => {
+      dispatch({
+        type: 'user/fetchCurrent',
+        payload: {
+          resolve,
+          reject
+        }
+      });
+    }).then((data) => {
+      return data;
+    });
+  };
 
   render() {
-    const { loading, isLogin } = this.props;
-    if (loading && !isLogin) {
-      return <Spin />;
+    // const {isLogin, currentUser, dispatch } = this.props;
+    if (this.state.loading) {
+      return (
+        <Spin spinning={this.state.loading} style={{ verticalAlign: 'middle' }}>
+          <div style={{ height: window.innerHeight }}>{/* loading... */}</div>
+        </Spin>
+      );
     }
     return <BasicLayout {...this.props} />;
   }

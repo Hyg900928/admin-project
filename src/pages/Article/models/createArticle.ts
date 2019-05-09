@@ -1,7 +1,6 @@
-import { createArticle, getArticleInfo } from '@/services/article';
+import { createArticle, getArticleInfo, editArticle } from '@/services/article';
 import { getTagList } from '@/services/tag';
 import { routerRedux } from 'dva/router';
-import { getPageQuery } from '@/utils/utils';
 import { Model } from 'dva';
 import { ArticleList } from '@/types/article';
 import { message } from 'antd';
@@ -10,7 +9,11 @@ import _debug from 'debug';
 const debug = _debug('app:models:createArticle');
 
 const defaultState: ArticleList.CreateArticleState = {
-  articleData: {},
+  articleData: {
+    content: null,
+    title: '',
+    tags: []
+  },
   tagsList: [],
   type: 'create'
 };
@@ -21,28 +24,14 @@ export default {
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen((location) => {
-        const query = getPageQuery();
-        console.log(query);
         if (location.pathname === '/article/create') {
+          // 初始化
           dispatch({
-            type: 'query',
-            payload: {}
+            type: 'resetState',
+            payload: {
+              ...defaultState
+            }
           });
-          if (query && query.id) {
-            dispatch({
-              type: 'onChangeState',
-              payload: {
-                type: 'edit'
-              }
-            });
-            dispatch({
-              type: 'getArticleInfo',
-              payload: {
-                id: query.id,
-                type: 'edit'
-              }
-            });
-          }
         }
       });
     }
@@ -76,6 +65,15 @@ export default {
       const res = yield call(createArticle, payload);
       if (res.code === 0) {
         message.info('创建成功', 2);
+        yield put(routerRedux.push('/article/list'));
+      }
+      debug(res);
+    },
+    *edit({ payload }, { call, put }) {
+      const { _id, ...data } = payload;
+      const res = yield call(editArticle, _id, data);
+      if (res.code === 0) {
+        message.info('编辑成功', 2);
         yield put(routerRedux.push('/article/list'));
       }
       debug(res);

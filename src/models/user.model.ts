@@ -14,29 +14,35 @@ export default {
   },
 
   effects: {
-    *fetchCurrent(_, { call, put }) {
-      const response = yield call(fetchCurrentUser);
-      // console.log(response)
-      if (response && response.code === 0) {
-        const userInfo = response.data;
-        yield put({
-          type: 'saveCurrentUser',
-          payload: {
-            id: userInfo.id,
-            account: userInfo.account,
-            avatar:
-              userInfo.avatar ||
-              'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png',
-            roles: userInfo.roles,
-            isLogin: true
-          }
-        });
-        yield put({
-          type: 'changeLoginStatus',
-          payload: {
-            isLogin: true
-          }
-        });
+    *fetchCurrent({ payload }, { call, put }) {
+      const { resolve, reject } = payload;
+      try {
+        const response = yield call(fetchCurrentUser);
+        // console.log(response)
+        if (response && response.code === 0) {
+          const userInfo = response.data;
+          yield put({
+            type: 'saveCurrentUser',
+            payload: {
+              id: userInfo.id,
+              account: userInfo.account,
+              avatar:
+                userInfo.avatar ||
+                'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png',
+              roles: userInfo.roles,
+              isLogin: true
+            }
+          });
+          yield put({
+            type: 'changeLoginStatus',
+            payload: {
+              isLogin: true
+            }
+          });
+          resolve(response.data);
+        }
+      } catch (error) {
+        reject(error);
       }
     },
     *fetchLogout(_, { call, put }) {

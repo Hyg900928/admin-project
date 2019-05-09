@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { Table, Card, Row, Col, Button } from 'antd';
+import { Table, Card, Row, Col, Button, Modal } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import { ArticleList } from '@/types/article';
 import moment from 'moment';
 import { connect } from 'dva';
 import router from 'umi/router';
-import { resolve } from 'url';
-import { reject } from 'q';
+
+const confirm = Modal.confirm;
 
 interface ArticleListProps {
   location?: any;
@@ -16,6 +16,13 @@ interface ArticleListProps {
 }
 
 class ArticleList extends Component<ArticleListProps, any> {
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'article/getArticleList',
+      payload: {}
+    });
+  }
   handleCreate = () => {
     router.push('/article/create');
   };
@@ -30,6 +37,24 @@ class ArticleList extends Component<ArticleListProps, any> {
       }
     });
   };
+  handleDelete = (id: string): void => {
+    const { dispatch } = this.props;
+    confirm({
+      title: '确定要删除吗?',
+      // content: 'Some descriptions',
+      onOk() {
+        dispatch({
+          type: 'article/deleteArticle',
+          payload: {
+            id
+          }
+        });
+      },
+      onCancel() {
+        console.log('Cancel');
+      }
+    });
+  };
   render() {
     const { article, loading } = this.props;
     const columns: ColumnProps<ArticleList.AsObject>[] = [
@@ -41,7 +66,7 @@ class ArticleList extends Component<ArticleListProps, any> {
         title: '发布时间',
         dataIndex: 'createAt',
         render: (text, record) => {
-          return moment(text).format('YYYY-DD-MM HH:mm');
+          return moment(text).format('YYYY-MM-DD HH:mm');
         }
       },
       {
@@ -52,9 +77,21 @@ class ArticleList extends Component<ArticleListProps, any> {
         title: '操作',
         render: (text, record) => {
           return (
-            <Button type="primary" onClick={() => this.handleEdit(record._id)}>
-              编辑
-            </Button>
+            <div>
+              <Button
+                type="primary"
+                style={{ marginRight: 15 }}
+                onClick={() => this.handleEdit(record._id)}
+              >
+                编辑
+              </Button>
+              <Button
+                type="danger"
+                onClick={() => this.handleDelete(record._id)}
+              >
+                删除
+              </Button>
+            </div>
           );
         }
       }

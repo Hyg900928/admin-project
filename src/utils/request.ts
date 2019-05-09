@@ -129,6 +129,20 @@ export const PUT = (
   );
 };
 
+export const PATCH = (
+  url: string,
+  data?: object,
+  config?: AxiosRequestConfig
+) => {
+  return request(
+    Object.assign({}, config, {
+      url: url,
+      data: data,
+      method: 'patch'
+    })
+  );
+};
+
 export const DELETE = (
   url: string,
   data?: object,

@@ -179,7 +179,7 @@ class BaseMenu extends React.PureComponent<BaseMenuProps, any> {
         >
           {this.getNavMenuItems(menuData)}
         </Menu>
-        <div ref={this.getRef} />
+        {/* <div ref={this.getRef} /> */}
       </>
     );
   }

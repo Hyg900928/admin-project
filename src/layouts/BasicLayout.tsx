@@ -3,10 +3,10 @@ import { Layout } from 'antd';
 import H from 'history';
 import DocumentTitle from 'react-document-title';
 import { ContainerQuery } from 'react-container-query';
-import PathToRegexp from 'path-to-regexp';
+// import PathToRegexp from 'path-to-regexp';
 import { connect } from 'dva';
 import classNames from 'classnames';
-import { formatMessage } from 'umi/locale';
+// import { formatMessage } from 'umi/locale';
 import Media from 'react-media';
 import { Dispatch } from 'redux';
 import SideMenu from '@/components/SideMenu';
@@ -16,6 +16,7 @@ import Context from './MenuContext';
 import Header from './Header';
 import Footer from './Footer';
 import logo from '../assets/logo.svg';
+import styles from './BasicLayout.less';
 // import AuthBasicLayout from './AuthBasicLayout'
 
 const { Content } = Layout;
@@ -134,7 +135,7 @@ class BasicLayout extends React.PureComponent<BasicLayoutProps, State> {
 
   render() {
     const {
-      setting: { navTheme, layout: PropsLayout },
+      setting: { navTheme, fixedHeader, layout: PropsLayout },
       children,
       menuData,
       breadcrumbNameMap,
@@ -144,19 +145,18 @@ class BasicLayout extends React.PureComponent<BasicLayoutProps, State> {
       location: { pathname }
     } = this.props;
     const isTop = PropsLayout === 'topMenu';
+    const contentStyle = !fixedHeader ? { paddingTop: 0 } : {};
     const layout = (
       <Layout>
         {isTop && !isMobile ? null : (
-          <div>
-            <SideMenu
-              logo={logo}
-              theme={navTheme}
-              onCollapse={this.handleMenuCollapse}
-              menuData={menuData}
-              isMobile={isMobile}
-              {...this.props}
-            />
-          </div>
+          <SideMenu
+            logo={logo}
+            theme={navTheme}
+            onCollapse={this.handleMenuCollapse}
+            menuData={menuData}
+            isMobile={isMobile}
+            {...this.props}
+          />
         )}
         <Layout
           style={{
@@ -171,7 +171,9 @@ class BasicLayout extends React.PureComponent<BasicLayoutProps, State> {
             isMobile={isMobile}
             handleMenuCollapse={this.handleMenuCollapse}
           />
-          <Content style={this.getContentStyle()}>{children}</Content>
+          <Content className={styles.content} style={contentStyle}>
+            {children}
+          </Content>
           <Footer />
         </Layout>
       </Layout>
@@ -195,6 +197,7 @@ class BasicLayout extends React.PureComponent<BasicLayoutProps, State> {
     );
   }
 }
+
 export default connect(({ global, setting, menu }) => ({
   collapsed: global.collapsed,
   layout: setting.layout,
@@ -206,9 +209,3 @@ export default connect(({ global, setting, menu }) => ({
     {(isMobile) => <BasicLayout {...props} isMobile={isMobile} />}
   </Media>
 ));
-{
-  /* <BasicLayout {...props} isMobile={isMobile} /> */
-}
-// const NewCom = wrapperBasicLayout(Com)
-
-// export default  NewCom
