@@ -1,9 +1,10 @@
 import { createArticle, getArticleInfo, editArticle } from '@/services/article';
 import { getTagList } from '@/services/tag';
 import { routerRedux } from 'dva/router';
+import router from 'umi/router';
 import { Model } from 'dva';
 import { ArticleList } from '@/types/article';
-import { message } from 'antd';
+import BraftEditor from 'braft-editor';
 import _debug from 'debug';
 
 const debug = _debug('app:models:createArticle');
@@ -14,6 +15,7 @@ const defaultState: ArticleList.CreateArticleState = {
     title: '',
     tags: []
   },
+  editorContent: BraftEditor.createEditorState(null),
   tagsList: [],
   type: 'create'
 };
@@ -55,28 +57,36 @@ export default {
         yield put({
           type: 'onChangeState',
           payload: {
-            articleData: res.data
+            articleData: res.data,
+            editorContent: BraftEditor.createEditorState(res.data.content)
           }
         });
       }
       debug(res);
     },
     *create({ payload }, { call, put }) {
-      const res = yield call(createArticle, payload);
-      if (res.code === 0) {
-        message.info('创建成功', 2);
-        yield put(routerRedux.push('/article/list'));
+      const { resolve, reject } = payload;
+      try {
+        const res = yield call(createArticle, payload);
+        if (res.code === 0) {
+          resolve(res);
+        }
+      } catch (error) {
+        reject(error);
+        debug(error);
       }
-      debug(res);
     },
     *edit({ payload }, { call, put }) {
-      const { _id, ...data } = payload;
-      const res = yield call(editArticle, _id, data);
-      if (res.code === 0) {
-        message.info('编辑成功', 2);
-        yield put(routerRedux.push('/article/list'));
+      const { _id, resolve, reject, ...data } = payload;
+      try {
+        const res = yield call(editArticle, _id, data);
+        if (res.code === 0) {
+          resolve(res);
+        }
+      } catch (error) {
+        debug(error);
+        reject(error);
       }
-      debug(res);
     }
   },
 

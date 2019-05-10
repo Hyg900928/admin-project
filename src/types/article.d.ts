@@ -1,3 +1,4 @@
+import { EditorState } from 'braft-editor';
 export namespace ArticleList {
   export type AsObject = {
     author?: Object;
@@ -13,5 +14,6 @@ export namespace ArticleList {
     articleData: AsObject;
     tagsList: any[];
     type: string;
+    editorContent: EditorState;
   }
 }

@@ -12,10 +12,10 @@ import { Upload, Icon } from 'antd';
 import styles from './index.less';
 
 export interface BraftEditorComProps {
-  handleChange: (value: EditorState) => void;
+  onChangeState: (value: EditorState) => void;
   content: string | any;
   // ref: any
-  editorInstance: any;
+  editorInstance?: any;
   children?: React.ReactNode;
 }
 
@@ -56,16 +56,7 @@ class BraftEditorComponent extends React.Component<
   };
 
   render() {
-    const { editorInstance } = this.props;
-    const controls: ControlType[] = [
-      'bold',
-      'italic',
-      'underline',
-      'text-color',
-      'separator',
-      'link',
-      'separator'
-    ];
+    const { onChangeState, content } = this.props;
     const extendControls: ExtendControlType[] = [
       {
         key: 'antd-uploader',
@@ -88,16 +79,22 @@ class BraftEditorComponent extends React.Component<
         )
       }
     ];
+    const editorProps = {
+      defaultValue: content || '',
+      value: content,
+      onChange: onChangeState
+    };
     return (
       <div>
         <div className="editor-wrapper">
           <BraftEditor
-            ref={editorInstance}
+            // ref={editorInstance}
+            {...editorProps}
             className={styles['custom-editor']}
-            value={this.state.editorState}
+            // value={this.state.editorState}
             // onChange={handleEditorChange}
-            controls={controls}
-            extendControls={extendControls}
+            // controls={controls}
+            // extendControls={extendControls}
           />
         </div>
       </div>

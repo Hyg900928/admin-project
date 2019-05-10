@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import { Card, Form, Input, Button, Select } from 'antd';
+import { Card, Form, Input, Button, Select, Modal } from 'antd';
 import { FormComponentProps } from 'antd/lib/form/Form';
 import { ArticleList } from '@/types/article';
-import BraftEditComponent, {
-  BraftEditorComProps
-} from '@/components/BraftEdit';
+import BraftEditComponent, { BraftEditorComProps } from '@/components/Editor';
 
 import { getUserId } from '@/utils/base';
 import { getPageQuery } from '@/utils/utils';
+import router from 'umi/router';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -57,7 +56,7 @@ class CreateArticle extends Component<CreateFormProps, any> {
   handleSubmit = (e: React.MouseEvent): void => {
     const {
       form: { validateFieldsAndScroll },
-      data: { articleData }
+      data: { articleData, editorContent }
     } = this.props;
 
     e && e.preventDefault();
@@ -67,9 +66,7 @@ class CreateArticle extends Component<CreateFormProps, any> {
           ...articleData,
           title: values.title,
           tags: values.tags,
-          content:
-            this.editorInstance.current &&
-            this.editorInstance.current.getValue().toHTML()
+          content: editorContent && editorContent.toHTML()
         };
 
         // console.log(submitData)
@@ -78,7 +75,7 @@ class CreateArticle extends Component<CreateFormProps, any> {
     });
   };
 
-  postData = (values: ArticleList.AsObject): void => {
+  postData = (values: ArticleList.AsObject) => {
     const {
       dispatch,
       data: { type }
@@ -87,10 +84,24 @@ class CreateArticle extends Component<CreateFormProps, any> {
       ...values,
       author: getUserId()
     };
-
-    dispatch({
-      type: `createArticle/${type}`,
-      payload: sendData
+    new Promise((resolve, reject) => {
+      dispatch({
+        type: `createArticle/${type}`,
+        payload: {
+          ...sendData,
+          resolve,
+          reject
+        }
+      });
+    }).then((data: any) => {
+      if (data.code === 0) {
+        Modal.info({
+          title: type === 'create' ? '创建成功' : '编辑成功',
+          onOk() {
+            router.push('/article/list');
+          }
+        });
+      }
     });
   };
   render() {
@@ -100,7 +111,7 @@ class CreateArticle extends Component<CreateFormProps, any> {
       data,
       dispatch
     } = this.props;
-    const { articleData } = data;
+    const { articleData, editorContent } = data;
     const { tagsList } = data;
     const formItemLayout = {
       labelCol: {
@@ -125,16 +136,12 @@ class CreateArticle extends Component<CreateFormProps, any> {
       }
     };
     const braftEditProps: BraftEditorComProps = {
-      editorInstance: this.editorInstance,
-      content: articleData.content,
-      handleChange(values) {
+      content: editorContent,
+      onChangeState(value) {
         dispatch({
           type: 'createArticle/onChangeState',
           payload: {
-            articleData: {
-              ...articleData,
-              content: values.toHTML()
-            }
+            editorContent: value
           }
         });
       }
