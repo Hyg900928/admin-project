@@ -83,7 +83,7 @@ class BraftEditorComponent extends React.Component<
 
     const myUploadFn = (param) => {
       // console.log(param)
-      const serverURL = 'http://localhost:9001/api/v1/upload';
+      const serverURL = `${AXIOS_DEFAULT_CONFIG.baseURL}/api/v1/upload`;
       const xhr = new XMLHttpRequest();
       const fd = new FormData();
 
