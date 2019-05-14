@@ -5,6 +5,7 @@ import BraftEditor, {
   ExtendControlType,
   EditorState
 } from 'braft-editor';
+import { AXIOS_DEFAULT_CONFIG } from '@/config';
 
 import { ContentUtils } from 'braft-utils';
 // import { ImageUtils } from 'braft-finder'
@@ -79,11 +80,52 @@ class BraftEditorComponent extends React.Component<
         )
       }
     ];
+
+    const myUploadFn = (param) => {
+      // console.log(param)
+      const serverURL = 'http://localhost:9001/api/v1/upload';
+      const xhr = new XMLHttpRequest();
+      const fd = new FormData();
+
+      const successFn = (response) => {
+        // 假设服务端直接返回文件上传后的地址
+        // 上传成功后调用param.success并传入上传后的文件地址
+        const res = JSON.parse(xhr.responseText);
+        param.success({
+          url: `${AXIOS_DEFAULT_CONFIG.baseURL}/${res.data.filePath}`
+        });
+      };
+
+      const progressFn = (event) => {
+        // 上传进度发生变化时调用param.progress
+        param.progress((event.loaded / event.total) * 100);
+      };
+
+      const errorFn = (response) => {
+        // 上传发生错误时调用param.error
+        param.error({
+          msg: 'unable to upload.'
+        });
+      };
+
+      xhr.upload.addEventListener('progress', progressFn, false);
+      xhr.addEventListener('load', successFn, false);
+      xhr.addEventListener('error', errorFn, false);
+      xhr.addEventListener('abort', errorFn, false);
+
+      fd.append('file', param.file);
+      xhr.open('POST', serverURL, true);
+      xhr.send(fd);
+    };
     const editorProps = {
       defaultValue: content || '',
       value: content,
-      onChange: onChangeState
+      onChange: onChangeState,
+      media: {
+        uploadFn: myUploadFn
+      }
     };
+
     return (
       <div>
         <div className="editor-wrapper">
