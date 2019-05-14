@@ -15,6 +15,7 @@ export default {
 
   effects: {
     *fetchCurrent({ payload }, { call, put }) {
+      console.log(process.env.NODE_ENV);
       const { resolve, reject } = payload;
       try {
         const response = yield call(fetchCurrentUser);

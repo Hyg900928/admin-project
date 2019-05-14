@@ -7,7 +7,7 @@ export const AXIOS_DEFAULT_CONFIG = {
       ? 'http://localhost:9001'
       : 'https://api.heyungao.com'
 };
-
+console.log(process.env.NODE_ENV);
 // 项目相关配置
 export const PROJECT_DEFAULT_CONFIG = {
   companyName: '炫踪网络股份有限公司 '
