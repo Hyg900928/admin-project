@@ -2,7 +2,10 @@
 export const AXIOS_DEFAULT_CONFIG = {
   timeout: 20000,
   withCredentials: true,
-  baseURL: 'http://localhost:9001'
+  baseURL:
+    process.env.NODE_ENV === 'development'
+      ? 'http://localhost:9001'
+      : 'https://api.heyungao.com'
 };
 
 // 项目相关配置
