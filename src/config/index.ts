@@ -1,7 +1,7 @@
 // axios 相关配置
 export const AXIOS_DEFAULT_CONFIG = {
   timeout: 20000,
-  withCredentials: true,
+  withCredentials: false, // 配置是否带cookie请求, axios 默认是发送请求的时候不带上cookie的, 需要设置widthCredentials: true, 如果设置为true , 后端的 Access-Control-Allow-Origin 不可以为"*", 需要配置指定的地址. 设置为false ,就可以了.
   baseURL:
     process.env.NODE_ENV === 'development'
       ? 'http://localhost:9001'

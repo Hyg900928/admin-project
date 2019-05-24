@@ -6,3 +6,4 @@ package-lock.json
 /src/pages/.umi
 /.vscode/.react
 /.vscode/settings.json
+dist
