@@ -7,3 +7,4 @@ package-lock.json
 /.vscode/.react
 /.vscode/settings.json
 dist
+.idea
