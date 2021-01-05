@@ -21,7 +21,7 @@
   "dependencies": {
     "@antv/data-set": "^0.10.2",
     "antd": "^3.19.8",
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "bizcharts": "^3.5.4",
     "bizcharts-plugin-slider": "^2.1.1-beta.1",
     "braft-editor": "^2.3.7",
