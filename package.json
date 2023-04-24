@@ -51,7 +51,7 @@
     "react-transition-group": "^4.1.1",
     "rollbar": "^2.7.1",
     "store": "^2.0.12",
-    "xlsx": "^0.14.3",
+    "xlsx": "^0.18.5",
     "typescript": "^3.5.2",
     "umi": "^2.7.2",
     "umi-plugin-react": "^1.8.2"
